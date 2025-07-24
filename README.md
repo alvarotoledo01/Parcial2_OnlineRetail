@@ -1,47 +1,58 @@
-# online_retail
+# Online Retail Customer Segmentation
 
-This is a [Dagster](https://dagster.io/) project scaffolded with [`dagster project scaffold`](https://docs.dagster.io/getting-started/create-new-project).
+## Descripción
 
-## Getting started
+Este proyecto realiza segmentación de clientes utilizando análisis RFM (Recency, Frequency, Monetary) con múltiples algoritmos de clustering. El pipeline está implementado con Dagster y el tracking de experimentos con MLflow.
 
-First, install your Dagster code location as a Python package. By using the --editable flag, pip will install your Python package in ["editable mode"](https://pip.pypa.io/en/latest/topics/local-project-installs/#editable-installs) so that as you develop, local code changes will automatically apply.
+## Configuración del Entorno
+
+### 1. Crear el entorno de Conda
 
 ```bash
-pip install -e ".[dev]"
+conda env create -f environment.yml
+conda activate online_retail
 ```
 
-Then, start the Dagster UI web server:
+### 2. Configurar MLflow (Opcional)
+
+Crear un archivo `.env` en la raíz del proyecto:
 
 ```bash
+# Para uso local (por defecto si no se especifica)
+MLFLOW_TRACKING_URI=file:./mlruns
+
+# Para usar un servidor MLflow remoto
+MLFLOW_TRACKING_URI=http://192.168.1.108:5000"
+```
+
+**Nota**: Si no creas el archivo `.env`, el sistema usará automáticamente `file:./mlruns` para almacenamiento local.
+
+### 3. Ejecutar el Pipeline
+
+```bash
+# Desde la raíz del proyecto
 dagster dev
 ```
 
-Open http://localhost:3000 with your browser to see the project.
+Esto levantará la interfaz web de Dagster en `http://localhost:3000` donde podrás:
 
-You can start writing assets in `online_retail/assets.py`. The assets are automatically loaded into the Dagster code location as you define them.
+- Visualizar el pipeline completo
+- Ejecutar assets individuales o todo el pipeline
+- Monitorear el progreso y logs
+- Ver los resultados de clustering y métricas en MLflow
 
-## Development
+## Estructura del Proyecto
 
-### Adding new Python dependencies
+- `online_retail/assets/` - Assets de Dagster (carga, limpieza, clustering)
+- `online_retail/resources/` - Configuración de recursos (MLflow)
+- `environment.yml` - Especificación del entorno de Conda
+- `.env` - Variables de entorno (crear manualmente)
 
-You can specify new Python dependencies in `setup.py`.
+## Algoritmos de Clustering Incluidos
 
-### Unit testing
+- K-Means
+- Agglomerative Clustering
+- Gaussian Mixture Model
+- DBSCAN
 
-Tests are in the `online_retail_tests` directory and you can run tests using `pytest`:
-
-```bash
-pytest online_retail_tests
-```
-
-### Schedules and sensors
-
-If you want to enable Dagster [Schedules](https://docs.dagster.io/concepts/partitions-schedules-sensors/schedules) or [Sensors](https://docs.dagster.io/concepts/partitions-schedules-sensors/sensors) for your jobs, the [Dagster Daemon](https://docs.dagster.io/deployment/dagster-daemon) process must be running. This is done automatically when you run `dagster dev`.
-
-Once your Dagster Daemon is running, you can start turning on schedules and sensors for your jobs.
-
-## Deploy on Dagster Cloud
-
-The easiest way to deploy your Dagster project is to use Dagster Cloud.
-
-Check out the [Dagster Cloud Documentation](https://docs.dagster.cloud) to learn more.
+Cada algoritmo genera métricas de evaluación (Silhouette Score, Calinski-Harabasz, Davies-Bouldin) y visualizaciones PCA.
