@@ -1,0 +1,18 @@
+name: online_retail
+channels:
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+dependencies:
+  - python=3.13
+  - matplotlib
+  - numpy
+  - pandas
+  - scikit-learn
+  - seaborn
+  - ipykernel
+  - openpyxl
+  - dagster
+  - dagster-webserver
+  - chardet
+  - conda-forge::dagster-mlflow
+prefix: /opt/anaconda3/envs/online_retail
